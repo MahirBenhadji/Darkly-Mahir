@@ -1,0 +1,17 @@
+Flag 5 – Web crawling sur /.hidden
+
+En visitant http://192.168.1.47/robots.txt, on voit :
+
+User-agent: * Disallow: /whatever Disallow: /.hidden
+
+On recupère le contenu :
+
+wget -r --no-parent --execute robots=off http://192.168.1.47/.hidden/
+
+On rentre : cd 192.168.1.47/.hidden
+
+Tous les sous dossiers contiennent des fichiers README avec du texte en clair. On les parcourt tous et on filtre sur le mot "flag" :
+
+find . -type f -iname "README*" -exec cat {} + | grep -i flag
+<img width="766" height="42" alt="Image" src="https://github.com/user-attachments/assets/bec044bd-8063-4be3-8901-4a60c6e9da2d" />
+Hey, here is your flag : d5eec3ec36cf80dce44a896f961c1831a05526ec215693c8f2c39543497d4466
